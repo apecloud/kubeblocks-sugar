@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,17 +26,17 @@ import (
 
 // ApeCloudMySQLSpec defines the desired state of ApeCloudMySQL
 type ApeCloudMySQLSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of ApeCloudMySQL. Edit apecloudmysql_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Version      string            `json:"version"`
+	Replicas     int32             `json:"replicas,omitempty"`
+	CPU          resource.Quantity `json:"cpu"`
+	Memory       resource.Quantity `json:"memory"`
+	Storage      resource.Quantity `json:"storage"`
+	ProxyEnabled bool              `json:"proxyEnabled,omitempty"`
 }
 
 // ApeCloudMySQLStatus defines the observed state of ApeCloudMySQL
 type ApeCloudMySQLStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Phase string `json:"phase"`
 }
 
 //+kubebuilder:object:root=true
