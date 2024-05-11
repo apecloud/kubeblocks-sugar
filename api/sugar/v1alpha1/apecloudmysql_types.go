@@ -23,17 +23,17 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// MySQLSpec defines the desired state of MySQL
-type MySQLSpec struct {
+// ApeCloudMySQLSpec defines the desired state of ApeCloudMySQL
+type ApeCloudMySQLSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of MySQL. Edit mysql_types.go to remove/update
+	// Foo is an example field of ApeCloudMySQL. Edit apecloudmysql_types.go to remove/update
 	Foo string `json:"foo,omitempty"`
 }
 
-// MySQLStatus defines the observed state of MySQL
-type MySQLStatus struct {
+// ApeCloudMySQLStatus defines the observed state of ApeCloudMySQL
+type ApeCloudMySQLStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -41,24 +41,24 @@ type MySQLStatus struct {
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// MySQL is the Schema for the mysqls API
-type MySQL struct {
+// ApeCloudMySQL is the Schema for the apecloudmysqls API
+type ApeCloudMySQL struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MySQLSpec   `json:"spec,omitempty"`
-	Status MySQLStatus `json:"status,omitempty"`
+	Spec   ApeCloudMySQLSpec   `json:"spec,omitempty"`
+	Status ApeCloudMySQLStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// MySQLList contains a list of MySQL
-type MySQLList struct {
+// ApeCloudMySQLList contains a list of ApeCloudMySQL
+type ApeCloudMySQLList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []MySQL `json:"items"`
+	Items           []ApeCloudMySQL `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&MySQL{}, &MySQLList{})
+	SchemeBuilder.Register(&ApeCloudMySQL{}, &ApeCloudMySQLList{})
 }

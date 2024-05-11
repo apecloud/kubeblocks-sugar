@@ -1,27 +1,31 @@
-# permissions for end users to view mysqls.
+# permissions for end users to edit apecloudmysqls.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: clusterrole
-    app.kubernetes.io/instance: mysql-viewer-role
+    app.kubernetes.io/instance: apecloudmysql-editor-role
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: kubeblocks-sugar
     app.kubernetes.io/part-of: kubeblocks-sugar
     app.kubernetes.io/managed-by: kustomize
-  name: mysql-viewer-role
+  name: apecloudmysql-editor-role
 rules:
 - apiGroups:
   - sugar.kubeblocks.io
   resources:
-  - mysqls
+  - apecloudmysqls
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
   - sugar.kubeblocks.io
   resources:
-  - mysqls/status
+  - apecloudmysqls/status
   verbs:
   - get

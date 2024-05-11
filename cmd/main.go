@@ -32,8 +32,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/v1alpha1"
-	"github.com/apecloud/kubeblocks-sugar/internal/controller"
+	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
+	sugarcontroller "github.com/apecloud/kubeblocks-sugar/internal/controller/sugar"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -89,11 +89,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controller.MySQLReconciler{
+	if err = (&sugarcontroller.ApeCloudMySQLReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "MySQL")
+		setupLog.Error(err, "unable to create controller", "controller", "ApeCloudMySQL")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

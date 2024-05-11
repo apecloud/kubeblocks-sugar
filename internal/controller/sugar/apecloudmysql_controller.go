@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package sugar
 
 import (
 	"context"
@@ -24,29 +24,29 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/v1alpha1"
+	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
 )
 
-// MySQLReconciler reconciles a MySQL object
-type MySQLReconciler struct {
+// ApeCloudMySQLReconciler reconciles a ApeCloudMySQL object
+type ApeCloudMySQLReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=sugar.kubeblocks.io,resources=mysqls,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=sugar.kubeblocks.io,resources=mysqls/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=sugar.kubeblocks.io,resources=mysqls/finalizers,verbs=update
+//+kubebuilder:rbac:groups=sugar.kubeblocks.io,resources=apecloudmysqls,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=sugar.kubeblocks.io,resources=apecloudmysqls/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=sugar.kubeblocks.io,resources=apecloudmysqls/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the MySQL object against the actual cluster state, and then
+// the ApeCloudMySQL object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.16.3/pkg/reconcile
-func (r *MySQLReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *ApeCloudMySQLReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
@@ -55,8 +55,8 @@ func (r *MySQLReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *MySQLReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *ApeCloudMySQLReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&sugarv1alpha1.MySQL{}).
+		For(&sugarv1alpha1.ApeCloudMySQL{}).
 		Complete(r)
 }
