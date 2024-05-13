@@ -1,0 +1,41 @@
+apiVersion: sugar.kubeblocks.io/v1alpha1
+kind: ApeCloudMySQL
+metadata:
+  name: apecloud-mysql-example
+spec:
+  mysqlSpec:
+    replicas: 3
+    resources:
+      limits:
+        cpu: 100m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 512Mi
+    volumeClaimTemplates:
+      - name: data
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    enabledLogs:
+      - auditlog
+      - error
+      - general
+      - slow
+  proxySpec:
+    replicas: 1
+    resources:
+      limits:
+        cpu: 100m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 512Mi
+    enabledLogs:
+      - error
+      - warning
+      - info
+  terminationPolicy: WipeOut
