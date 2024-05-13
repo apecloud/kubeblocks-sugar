@@ -3736,6 +3736,25 @@ spec:
                         to an external Redis Sentinel service and a PostgreSQL Cluster."
                       items:
                         properties:
+                          cluster:
+                            description: "Specifies the name of the KubeBlocks Cluster
+                              being referenced. This is used when services from another
+                              KubeBlocks Cluster are consumed. \n By default, the
+                              referenced KubeBlocks Cluster's `clusterDefinition.spec.connectionCredential`
+                              will be utilized to bind to the current Component. This
+                              credential should include: `endpoint`, `port`, `username`,
+                              and `password`. \n Note: \n - The `ServiceKind` and
+                              `ServiceVersion` specified in the service reference
+                              within the ClusterDefinition are not validated when
+                              using this approach. - If both `cluster` and `serviceDescriptor`
+                              are present, `cluster` will take precedence. \n Deprecated
+                              since v0.9 since `clusterDefinition.spec.connectionCredential`
+                              is deprecated, use `clusterServiceSelector` instead.
+                              This field is maintained for backward compatibility
+                              and its use is discouraged. Existing usage should be
+                              updated to the current preferred approach to avoid compatibility
+                              issues in future releases."
+                            type: string
                           clusterServiceSelector:
                             description: References a service provided by another
                               KubeBlocks Cluster. It specifies the ClusterService
@@ -5435,6 +5454,13 @@ spec:
                         cluster-level services - CLUSTER_NAME-COMPONENT_NAME: for
                         component-level services \n Only one default service name
                         is allowed. Cannot be updated."
+                      type: string
+                    shardingSelector:
+                      description: Extends the ServiceSpec.Selector by allowing the
+                        specification of a sharding name, which is defined in `cluster.spec.shardingSpecs[*].name`,
+                        to be used as a selector for the service. Note that this and
+                        the `componentSelector` are mutually exclusive and cannot
+                        be set simultaneously.
                       type: string
                     spec:
                       description: Spec defines the behavior of a service. https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status

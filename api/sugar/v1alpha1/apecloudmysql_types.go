@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -52,6 +53,12 @@ type ApeCloudMySQLStatus struct {
 }
 
 type ApeCloudMySQLTopology string
+
+func (in *ApeCloudMySQLSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
+	clusterSpec := (&in.ClusterSpec).TranslateTo()
+	clusterSpec.Topology = string(in.Topology)
+	return clusterSpec
+}
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

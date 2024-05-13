@@ -59,6 +59,7 @@ func (r *ApeCloudMySQLReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	err := kubebuilderx.NewController(ctx, r.Client, req, r.EventRecorder, logger).
 		Prepare(objectTree()).
 		Do(translateToKubeBlocksCluster()).
+		Do(updateStatus()).
 		Commit()
 
 	return ctrl.Result{}, err

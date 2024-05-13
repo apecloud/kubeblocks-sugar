@@ -27,7 +27,7 @@ func (r *translateToKubeBlocksClusterReconciler) Reconcile(tree *kubebuilderx.Ob
 	if object != nil {
 		kbCluster, _ = object.(*appsv1alpha1.Cluster)
 	}
-	// TODO(free6om): do the translate job
+	kbCluster.Spec = *(&acCluster.Spec).TranslateTo()
 	if err = tree.Update(kbCluster); err != nil {
 		return nil, err
 	}
