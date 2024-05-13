@@ -96,7 +96,7 @@ spec:
                 required:
                 - method
                 type: object
-              mySQLComponentSpec:
+              mysqlSpec:
                 description: Specified the MySQL Component Spec.
                 properties:
                   enabledLogs:
@@ -118,12 +118,12 @@ spec:
                       for each instance within a Component. An instance represent
                       a single replica (Pod and associated K8s resources like PVCs,
                       Services, and ConfigMaps). While instances typically share a
-                      common configuration as defined in the ClusterComponentSpec,
-                      they can require unique settings in various scenarios: \n For
-                      example: - A database Component might require different resource
-                      allocations for primary and secondary instances, with primaries
-                      needing more resources. - During a rolling upgrade, a Component
-                      may first update the image for one or a few instances, and then
+                      common configuration as defined in the BaseComponentSpec, they
+                      can require unique settings in various scenarios: \n For example:
+                      - A database Component might require different resource allocations
+                      for primary and secondary instances, with primaries needing
+                      more resources. - During a rolling upgrade, a Component may
+                      first update the image for one or a few instances, and then
                       update the remaining instances after verifying that the updated
                       instances are functioning correctly. \n InstanceTemplate allows
                       for specifying these unique configurations per instance. Each
@@ -2372,13 +2372,6 @@ spec:
                       the Prometheus installed by KubeBlocks to discover and scrape
                       metrics from the exporter."
                     type: boolean
-                  name:
-                    description: Specifies the Component's name. It's part of the
-                      Service DNS name and must comply with the IANA service naming
-                      rule.
-                    maxLength: 22
-                    pattern: ^[a-z]([a-z0-9\-]*[a-z0-9])?$
-                    type: string
                   offlineInstances:
                     description: "Specifies the names of instances to be transitioned
                       to offline status. \n Marking an instance as offline results
@@ -4172,10 +4165,9 @@ spec:
                       type: object
                     type: array
                 required:
-                - name
                 - replicas
                 type: object
-              proxyComponentSpec:
+              proxySpec:
                 description: Specified the Proxy Component Spec.
                 properties:
                   enabledLogs:
@@ -4197,12 +4189,12 @@ spec:
                       for each instance within a Component. An instance represent
                       a single replica (Pod and associated K8s resources like PVCs,
                       Services, and ConfigMaps). While instances typically share a
-                      common configuration as defined in the ClusterComponentSpec,
-                      they can require unique settings in various scenarios: \n For
-                      example: - A database Component might require different resource
-                      allocations for primary and secondary instances, with primaries
-                      needing more resources. - During a rolling upgrade, a Component
-                      may first update the image for one or a few instances, and then
+                      common configuration as defined in the BaseComponentSpec, they
+                      can require unique settings in various scenarios: \n For example:
+                      - A database Component might require different resource allocations
+                      for primary and secondary instances, with primaries needing
+                      more resources. - During a rolling upgrade, a Component may
+                      first update the image for one or a few instances, and then
                       update the remaining instances after verifying that the updated
                       instances are functioning correctly. \n InstanceTemplate allows
                       for specifying these unique configurations per instance. Each
@@ -6451,13 +6443,6 @@ spec:
                       the Prometheus installed by KubeBlocks to discover and scrape
                       metrics from the exporter."
                     type: boolean
-                  name:
-                    description: Specifies the Component's name. It's part of the
-                      Service DNS name and must comply with the IANA service naming
-                      rule.
-                    maxLength: 22
-                    pattern: ^[a-z]([a-z0-9\-]*[a-z0-9])?$
-                    type: string
                   offlineInstances:
                     description: "Specifies the names of instances to be transitioned
                       to offline status. \n Marking an instance as offline results
@@ -8251,7 +8236,6 @@ spec:
                       type: object
                     type: array
                 required:
-                - name
                 - replicas
                 type: object
               schedulingPolicy:
@@ -9819,7 +9803,7 @@ spec:
                 - WipeOut
                 type: string
             required:
-            - mySQLComponentSpec
+            - mysqlSpec
             - terminationPolicy
             type: object
           status:

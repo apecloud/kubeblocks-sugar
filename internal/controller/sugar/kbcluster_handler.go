@@ -21,6 +21,7 @@ package sugar
 
 import (
 	"context"
+
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/util/workqueue"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -34,21 +35,21 @@ type kbClusterHandler struct {
 }
 
 func (h *kbClusterHandler) Create(ctx context.Context, event event.CreateEvent, limitingInterface workqueue.RateLimitingInterface) {
-	h.mapAndEnqueue(ctx, limitingInterface, event.Object)
+	h.mapAndEnqueue(limitingInterface, event.Object)
 }
 
 func (h *kbClusterHandler) Update(ctx context.Context, event event.UpdateEvent, limitingInterface workqueue.RateLimitingInterface) {
-	h.mapAndEnqueue(ctx, limitingInterface, event.ObjectNew)
+	h.mapAndEnqueue(limitingInterface, event.ObjectNew)
 }
 
 func (h *kbClusterHandler) Delete(ctx context.Context, event event.DeleteEvent, limitingInterface workqueue.RateLimitingInterface) {
-	h.mapAndEnqueue(ctx, limitingInterface, event.Object)
+	h.mapAndEnqueue(limitingInterface, event.Object)
 }
 
 func (h *kbClusterHandler) Generic(ctx context.Context, event event.GenericEvent, limitingInterface workqueue.RateLimitingInterface) {
 }
 
-func (h *kbClusterHandler) mapAndEnqueue(ctx context.Context, q workqueue.RateLimitingInterface, object client.Object) {
+func (h *kbClusterHandler) mapAndEnqueue(q workqueue.RateLimitingInterface, object client.Object) {
 	q.Add(ctrl.Request{NamespacedName: types.NamespacedName{Namespace: object.GetNamespace(), Name: object.GetName()}})
 }
 

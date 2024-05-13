@@ -17,8 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"fmt"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
@@ -32,12 +30,12 @@ type ApeCloudMySQLSpec struct {
 	BaseSpec `json:",inline"`
 
 	// Specified the MySQL Component Spec.
-	MySQLComponentSpec ClusterComponentSpec `json:"mySQLComponentSpec"`
+	MySQLSpec BaseComponentSpec `json:"mysqlSpec"`
 
 	// Specified the Proxy Component Spec.
 	//
 	// +optional
-	ProxyComponentSpec *ClusterComponentSpec `json:"proxyComponentSpec,omitempty"`
+	ProxySpec *BaseComponentSpec `json:"proxySpec,omitempty"`
 }
 
 // ApeCloudMySQLStatus defines the observed state of ApeCloudMySQL
@@ -49,17 +47,18 @@ type ApeCloudMySQLTopology string
 
 func (in *ApeCloudMySQLSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
 	clusterSpec := (&in.BaseSpec).TranslateTo()
-	mysqlSpec := (&in.MySQLComponentSpec).TranslateTo()
+	mysqlSpec := (&in.MySQLSpec).TranslateTo()
+	mysqlSpec.Name = "mysql"
 	//mysqlSpec.ComponentDef = "mysql"
 	mysqlSpec.ComponentDefRef = "mysql"
 	clusterSpec.ComponentSpecs = append(clusterSpec.ComponentSpecs, *mysqlSpec)
-	if in.ProxyComponentSpec != nil {
-		proxySpec := in.ProxyComponentSpec.TranslateTo()
+	if in.ProxySpec != nil {
+		proxySpec := in.ProxySpec.TranslateTo()
 		vtGateSpec := proxySpec.DeepCopy()
-		vtGateSpec.Name = fmt.Sprintf("%s-%s", proxySpec.Name, "vtgate")
+		vtGateSpec.Name = "vtgate"
 		vtGateSpec.ComponentDef = "vtgate"
 		vtControllerSpec := proxySpec.DeepCopy()
-		vtControllerSpec.Name = fmt.Sprintf("%s-%s", proxySpec.Name, "vtcontroller")
+		vtControllerSpec.Name = "vtcontroller"
 		vtControllerSpec.ComponentDef = "vtcontroller"
 		clusterSpec.ComponentSpecs = append(clusterSpec.ComponentSpecs, *vtGateSpec, *vtControllerSpec)
 	}

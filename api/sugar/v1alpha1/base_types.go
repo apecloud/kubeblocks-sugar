@@ -52,15 +52,8 @@ type BaseStatus struct {
 	appsv1alpha1.ClusterStatus `json:",inline"`
 }
 
-// ClusterComponentSpec defines the specification of a Component within a Cluster.
-type ClusterComponentSpec struct {
-	// Specifies the Component's name.
-	// It's part of the Service DNS name and must comply with the IANA service naming rule.
-	//
-	// +kubebuilder:validation:MaxLength=22
-	// +kubebuilder:validation:Pattern:=`^[a-z]([a-z0-9\-]*[a-z0-9])?$`
-	Name string `json:"name"`
-
+// BaseComponentSpec defines the specification of a Component within a Cluster.
+type BaseComponentSpec struct {
 	// ServiceVersion specifies the version of the Service expected to be provisioned by this Component.
 	// The version should follow the syntax and semantics of the "Semantic Versioning" specification (http://semver.org/).
 	// If no version is specified, the latest available version will be used.
@@ -198,7 +191,7 @@ type ClusterComponentSpec struct {
 
 	// Allows for the customization of configuration values for each instance within a Component.
 	// An instance represent a single replica (Pod and associated K8s resources like PVCs, Services, and ConfigMaps).
-	// While instances typically share a common configuration as defined in the ClusterComponentSpec,
+	// While instances typically share a common configuration as defined in the BaseComponentSpec,
 	// they can require unique settings in various scenarios:
 	//
 	// For example:
@@ -308,9 +301,8 @@ type SchedulingPolicy struct {
 	TopologySpreadConstraints []corev1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty"`
 }
 
-func (in *ClusterComponentSpec) TranslateTo() *appsv1alpha1.ClusterComponentSpec {
+func (in *BaseComponentSpec) TranslateTo() *appsv1alpha1.ClusterComponentSpec {
 	return &appsv1alpha1.ClusterComponentSpec{
-		Name:           in.Name,
 		ServiceVersion: in.ServiceVersion,
 		ServiceRefs:    in.ServiceRefs,
 		EnabledLogs:    in.EnabledLogs,

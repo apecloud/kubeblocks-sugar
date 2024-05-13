@@ -60,6 +60,7 @@ func (r *ApeCloudMySQLReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		Prepare(objectTree()).
 		Do(translateToKubeBlocksCluster()).
 		Do(updateStatus()).
+		Do(deleteCluster()).
 		Commit()
 
 	return ctrl.Result{}, err
