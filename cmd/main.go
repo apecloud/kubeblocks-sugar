@@ -34,10 +34,11 @@ import (
 
 	//+kubebuilder:scaffold:imports
 
-	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
-	sugarcontroller "github.com/apecloud/kubeblocks-sugar/internal/controller/sugar"
 	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
 	"github.com/apecloud/kubeblocks/pkg/controller/model"
+
+	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
+	sugarcontroller "github.com/apecloud/kubeblocks-sugar/internal/controller/sugar"
 )
 
 var (
@@ -103,6 +104,13 @@ func main() {
 		EventRecorder: mgr.GetEventRecorderFor("apecloud-mysql-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ApeCloudMySQL")
+		os.Exit(1)
+	}
+	if err = (&sugarcontroller.MySQLReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "MySQL")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
