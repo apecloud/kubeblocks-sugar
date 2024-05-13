@@ -32,9 +32,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/v1alpha1"
-	"github.com/apecloud/kubeblocks-sugar/internal/controller"
 	//+kubebuilder:scaffold:imports
+
+	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
+	sugarcontroller "github.com/apecloud/kubeblocks-sugar/internal/controller/sugar"
+	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
+	"github.com/apecloud/kubeblocks/pkg/controller/model"
 )
 
 var (
@@ -47,6 +50,11 @@ func init() {
 
 	utilruntime.Must(sugarv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+
+	utilruntime.Must(appsv1alpha1.AddToScheme(scheme))
+
+	model.AddScheme(sugarv1alpha1.AddToScheme)
+	model.AddScheme(appsv1alpha1.AddToScheme)
 }
 
 func main() {
@@ -89,11 +97,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controller.MySQLReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+	if err = (&sugarcontroller.ApeCloudMySQLReconciler{
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		EventRecorder: mgr.GetEventRecorderFor("apecloud-mysql-controller"),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "MySQL")
+		setupLog.Error(err, "unable to create controller", "controller", "ApeCloudMySQL")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

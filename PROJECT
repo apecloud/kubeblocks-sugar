@@ -5,6 +5,7 @@
 domain: kubeblocks.io
 layout:
 - go.kubebuilder.io/v4
+multigroup: true
 projectName: kubeblocks-sugar
 repo: github.com/apecloud/kubeblocks-sugar
 resources:
@@ -14,7 +15,7 @@ resources:
   controller: true
   domain: kubeblocks.io
   group: sugar
-  kind: MySQL
-  path: github.com/apecloud/kubeblocks-sugar/api/v1alpha1
+  kind: ApeCloudMySQL
+  path: github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1
   version: v1alpha1
 version: "3"

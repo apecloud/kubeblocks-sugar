@@ -1,4 +1,4 @@
 ## Append samples of your project ##
 resources:
-- sugar_v1alpha1_mysql.yaml
+- sugar_v1alpha1_apecloudmysql.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples
