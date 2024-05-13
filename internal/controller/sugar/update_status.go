@@ -26,7 +26,7 @@ func (r *updateStatusReconciler) Reconcile(tree *kubebuilderx.ObjectTree) (*kube
 	if object == nil {
 		return tree, nil
 	}
-	acCluster.Status.ClusterStatus.ClusterStatus = kbCluster.Status
+	acCluster.Status.BaseStatus.ClusterStatus = kbCluster.Status
 	return tree, nil
 }
 

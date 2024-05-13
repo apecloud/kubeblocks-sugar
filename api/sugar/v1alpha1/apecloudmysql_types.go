@@ -17,8 +17,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
+	"fmt"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -26,37 +29,39 @@ import (
 
 // ApeCloudMySQLSpec defines the desired state of ApeCloudMySQL
 type ApeCloudMySQLSpec struct {
-	ClusterSpec `json:",inline"`
+	BaseSpec `json:",inline"`
 
-	// Specifies the name of the ClusterTopology to be used when creating the Cluster.
+	// Specified the MySQL Component Spec.
+	MySQLComponentSpec ClusterComponentSpec `json:"mySQLComponentSpec"`
+
+	// Specified the Proxy Component Spec.
 	//
-	// Known .spec.topology are: "Standard"
-	// All topologies' description:
-	// - name: Standard
-	//   componentTopologies:
-	//   - name: mysql
-	//     required: true
-	//   - name: vtcontroller
-	//     required: false
-	//   - name: vtgate
-	//     required: false
-	//
-	// +kubebuilder:validation:Enum={Standard}
-	// +kubebuilder:default=Standard
-	// +kubebuilder:validation:Required
-	Topology ApeCloudMySQLTopology `json:"topology"`
+	// +optional
+	ProxyComponentSpec *ClusterComponentSpec `json:"proxyComponentSpec,omitempty"`
 }
 
 // ApeCloudMySQLStatus defines the observed state of ApeCloudMySQL
 type ApeCloudMySQLStatus struct {
-	ClusterStatus `json:",inline"`
+	BaseStatus `json:",inline"`
 }
 
 type ApeCloudMySQLTopology string
 
 func (in *ApeCloudMySQLSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
-	clusterSpec := (&in.ClusterSpec).TranslateTo()
-	clusterSpec.Topology = string(in.Topology)
+	clusterSpec := (&in.BaseSpec).TranslateTo()
+	mysqlSpec := (&in.MySQLComponentSpec).TranslateTo()
+	mysqlSpec.ComponentDef = "mysql"
+	clusterSpec.ComponentSpecs = append(clusterSpec.ComponentSpecs, *mysqlSpec)
+	if in.ProxyComponentSpec != nil {
+		proxySpec := in.ProxyComponentSpec.TranslateTo()
+		vtGateSpec := proxySpec.DeepCopy()
+		vtGateSpec.Name = fmt.Sprintf("%s-%s", proxySpec.Name, "vtgate")
+		vtGateSpec.ComponentDef = "vtgate"
+		vtControllerSpec := proxySpec.DeepCopy()
+		vtControllerSpec.Name = fmt.Sprintf("%s-%s", proxySpec.Name, "vtcontroller")
+		vtControllerSpec.ComponentDef = "vtcontroller"
+		clusterSpec.ComponentSpecs = append(clusterSpec.ComponentSpecs, *vtGateSpec, *vtControllerSpec)
+	}
 	return clusterSpec
 }
 

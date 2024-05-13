@@ -6,25 +6,7 @@ import (
 	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
 )
 
-type ClusterSpec struct {
-	// Specifies the name of the ClusterTopology to be used when creating the Cluster.
-	//
-	// Override: Should be overridden to describe all the available topologies.
-	//
-	// +kubebuilder:validation:MaxLength=32
-	// +optional
-	Topology string `json:"topology,omitempty"`
-
-	// Specifies a list of ClusterComponentSpec objects used to define the individual Components that make up a Cluster.
-	// This field allows for detailed configuration of each Component within the Cluster.
-	//
-	// +kubebuilder:validation:MinItems=1
-	// +kubebuilder:validation:MaxItems=128
-	// +kubebuilder:validation:XValidation:rule="self.all(x, size(self.filter(c, c.name == x.name)) == 1)",message="duplicated component"
-	// +kubebuilder:validation:XValidation:rule="self.all(x, size(self.filter(c, has(c.componentDef))) == 0) || self.all(x, size(self.filter(c, has(c.componentDef))) == size(self))",message="two kinds of definition API can not be used simultaneously"
-	// +optional
-	ComponentSpecs []ClusterComponentSpec `json:"componentSpecs,omitempty" patchStrategy:"merge,retainKeys" patchMergeKey:"name"`
-
+type BaseSpec struct {
 	// Defines a list of additional Services that are exposed by a Cluster.
 	// This field allows Services of selected Components,
 	// alongside Services defined with ComponentService.
@@ -39,11 +21,6 @@ type ClusterSpec struct {
 	//
 	// +optional
 	SchedulingPolicy *SchedulingPolicy `json:"schedulingPolicy,omitempty"`
-
-	// Specifies runtimeClassName for all Pods managed by this Cluster.
-	//
-	// +optional
-	RuntimeClassName *string `json:"runtimeClassName,omitempty"`
 
 	// Specifies the backup configuration of the Cluster.
 	//
@@ -71,7 +48,7 @@ type ClusterSpec struct {
 	TerminationPolicy appsv1alpha1.TerminationPolicyType `json:"terminationPolicy"`
 }
 
-type ClusterStatus struct {
+type BaseStatus struct {
 	appsv1alpha1.ClusterStatus `json:",inline"`
 }
 
@@ -83,14 +60,6 @@ type ClusterComponentSpec struct {
 	// +kubebuilder:validation:MaxLength=22
 	// +kubebuilder:validation:Pattern:=`^[a-z]([a-z0-9\-]*[a-z0-9])?$`
 	Name string `json:"name"`
-
-	// Specifies the name of the ComponentTopology to be used when creating the Component.
-	// The ComponentTopology must present in the chosen ClusterTopology.
-	//
-	// +kubebuilder:validation:MaxLength=64
-	// +kubebuilder:validation:Pattern:=`^[a-z0-9]([a-z0-9\.\-]*[a-z0-9])?$`
-	// +optional
-	ComponentTopology string `json:"componentDef,omitempty"`
 
 	// ServiceVersion specifies the version of the Service expected to be provisioned by this Component.
 	// The version should follow the syntax and semantics of the "Semantic Versioning" specification (http://semver.org/).
@@ -342,7 +311,6 @@ type SchedulingPolicy struct {
 func (in *ClusterComponentSpec) TranslateTo() *appsv1alpha1.ClusterComponentSpec {
 	return &appsv1alpha1.ClusterComponentSpec{
 		Name:           in.Name,
-		ComponentDef:   in.ComponentTopology,
 		ServiceVersion: in.ServiceVersion,
 		ServiceRefs:    in.ServiceRefs,
 		EnabledLogs:    in.EnabledLogs,
@@ -362,19 +330,11 @@ func (in *ClusterComponentSpec) TranslateTo() *appsv1alpha1.ClusterComponentSpec
 	}
 }
 
-func (in *ClusterSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
-	var componentSpecs []appsv1alpha1.ClusterComponentSpec
-	for i := range in.ComponentSpecs {
-		spec := &in.ComponentSpecs[i]
-		componentSpecs = append(componentSpecs, *spec.TranslateTo())
-	}
+func (in *BaseSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
 	return &appsv1alpha1.ClusterSpec{
-		Topology:          in.Topology,
 		TerminationPolicy: in.TerminationPolicy,
-		ComponentSpecs:    componentSpecs,
 		Services:          in.Services,
 		// SchedulingPolicy: (&in.SchedulingPolicy).TranslateTo(),
-		RuntimeClassName: in.RuntimeClassName,
-		Backup:           in.Backup,
+		Backup: in.Backup,
 	}
 }
