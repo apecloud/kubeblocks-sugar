@@ -90,8 +90,9 @@ func main() {
 	}
 
 	if err = (&sugarcontroller.ApeCloudMySQLReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		EventRecorder: mgr.GetEventRecorderFor("apecloud-mysql-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "ApeCloudMySQL")
 		os.Exit(1)

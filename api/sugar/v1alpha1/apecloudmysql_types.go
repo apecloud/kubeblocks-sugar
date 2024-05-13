@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,18 +25,33 @@ import (
 
 // ApeCloudMySQLSpec defines the desired state of ApeCloudMySQL
 type ApeCloudMySQLSpec struct {
-	Version      string            `json:"version"`
-	Replicas     int32             `json:"replicas,omitempty"`
-	CPU          resource.Quantity `json:"cpu"`
-	Memory       resource.Quantity `json:"memory"`
-	Storage      resource.Quantity `json:"storage"`
-	ProxyEnabled bool              `json:"proxyEnabled,omitempty"`
+	ClusterSpec `json:",inline"`
+
+	// Specifies the name of the ClusterTopology to be used when creating the Cluster.
+	//
+	// Known .spec.topology are: "Standard"
+	// All topologies' description:
+	// - name: Standard
+	//   componentTopologies:
+	//   - name: mysql
+	//     required: true
+	//   - name: vtcontroller
+	//     required: false
+	//   - name: vtgate
+	//     required: false
+	//
+	// +kubebuilder:validation:Enum={Standard}
+	// +kubebuilder:default=Standard
+	// +kubebuilder:validation:Required
+	Topology ApeCloudMySQLTopology `json:"topology"`
 }
 
 // ApeCloudMySQLStatus defines the observed state of ApeCloudMySQL
 type ApeCloudMySQLStatus struct {
-	Phase string `json:"phase"`
+	ClusterStatus `json:",inline"`
 }
+
+type ApeCloudMySQLTopology string
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

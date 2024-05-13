@@ -5,6 +5,24 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - apps.kubeblocks.io
+  resources:
+  - clusters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps.kubeblocks.io
+  resources:
+  - clusters/status
+  verbs:
+  - get
+- apiGroups:
   - sugar.kubeblocks.io
   resources:
   - apecloudmysqls
