@@ -32,9 +32,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
+	//+kubebuilder:scaffold:imports
+
 	sugarv1alpha1 "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
 	sugarcontroller "github.com/apecloud/kubeblocks-sugar/internal/controller/sugar"
-	//+kubebuilder:scaffold:imports
+	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
+	"github.com/apecloud/kubeblocks/pkg/controller/model"
 )
 
 var (
@@ -47,6 +50,11 @@ func init() {
 
 	utilruntime.Must(sugarv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+
+	utilruntime.Must(appsv1alpha1.AddToScheme(scheme))
+
+	model.AddScheme(sugarv1alpha1.AddToScheme)
+	model.AddScheme(appsv1alpha1.AddToScheme)
 }
 
 func main() {

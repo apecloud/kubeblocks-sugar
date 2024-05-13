@@ -2,6 +2,7 @@ package sugar
 
 import (
 	sugar "github.com/apecloud/kubeblocks-sugar/api/sugar/v1alpha1"
+	appsv1alpha1 "github.com/apecloud/kubeblocks/apis/apps/v1alpha1"
 	"github.com/apecloud/kubeblocks/pkg/controller/builder"
 	"github.com/apecloud/kubeblocks/pkg/controller/kubebuilderx"
 	"github.com/apecloud/kubeblocks/pkg/controller/model"
@@ -26,6 +27,7 @@ func (r *updateStatusReconciler) Reconcile(tree *kubebuilderx.ObjectTree) (*kube
 	if object == nil {
 		return tree, nil
 	}
+	kbCluster, _ = object.(*appsv1alpha1.Cluster)
 	acCluster.Status.BaseStatus.ClusterStatus = kbCluster.Status
 	return tree, nil
 }

@@ -50,7 +50,8 @@ type ApeCloudMySQLTopology string
 func (in *ApeCloudMySQLSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
 	clusterSpec := (&in.BaseSpec).TranslateTo()
 	mysqlSpec := (&in.MySQLComponentSpec).TranslateTo()
-	mysqlSpec.ComponentDef = "mysql"
+	//mysqlSpec.ComponentDef = "mysql"
+	mysqlSpec.ComponentDefRef = "mysql"
 	clusterSpec.ComponentSpecs = append(clusterSpec.ComponentSpecs, *mysqlSpec)
 	if in.ProxyComponentSpec != nil {
 		proxySpec := in.ProxyComponentSpec.TranslateTo()
@@ -62,11 +63,17 @@ func (in *ApeCloudMySQLSpec) TranslateTo() *appsv1alpha1.ClusterSpec {
 		vtControllerSpec.ComponentDef = "vtcontroller"
 		clusterSpec.ComponentSpecs = append(clusterSpec.ComponentSpecs, *vtGateSpec, *vtControllerSpec)
 	}
+	clusterSpec.ClusterDefRef = "apecloud-mysql"
+	clusterSpec.ClusterVersionRef = "ac-mysql-8.0.30"
 	return clusterSpec
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+// +kubebuilder:resource:categories={kubeblocks,all}
+// +kubebuilder:printcolumn:name="TERMINATION-POLICY",type="string",JSONPath=".spec.terminationPolicy",description="Cluster termination policy."
+// +kubebuilder:printcolumn:name="STATUS",type="string",JSONPath=".status.phase",description="Cluster Status."
+// +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 
 // ApeCloudMySQL is the Schema for the apecloudmysqls API
 type ApeCloudMySQL struct {

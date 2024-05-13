@@ -8,13 +8,28 @@ metadata:
 spec:
   group: sugar.kubeblocks.io
   names:
+    categories:
+    - kubeblocks
+    - all
     kind: ApeCloudMySQL
     listKind: ApeCloudMySQLList
     plural: apecloudmysqls
     singular: apecloudmysql
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: Cluster termination policy.
+      jsonPath: .spec.terminationPolicy
+      name: TERMINATION-POLICY
+      type: string
+    - description: Cluster Status.
+      jsonPath: .status.phase
+      name: STATUS
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: ApeCloudMySQL is the Schema for the apecloudmysqls API

@@ -177,3 +177,9 @@ $(CONTROLLER_GEN): $(LOCALBIN)
 envtest: $(ENVTEST) ## Download envtest-setup locally if necessary.
 $(ENVTEST): $(LOCALBIN)
 	test -s $(LOCALBIN)/setup-envtest || GOBIN=$(LOCALBIN) go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
+
+GO ?= go
+
+.PHONY: api-doc
+api-doc:  ## generate API reference manual.
+	$(GO) run ./hack/docgen/api/main.go -api-dir github.com/apecloud/kubeblocks-sugar/api -config ./hack/docgen/api/gen-api-doc-config.json -template-dir ./hack/docgen/api/template -out-dir ./docs/developer_docs/api-reference/
